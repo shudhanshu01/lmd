@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VeriMatrix | Track Application</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/government-theme.css">
+</head>
+<body>
+  <div class="container py-5">
+    <h3 class="fw-bold mb-4">Track Verification Application</h3>
+    <div class="input-group mb-4" style="max-width: 500px;">
+      <input type="text" id="trackInput" class="form-control" placeholder="e.g. LM-VER-2026-004582" value="LM-VER-2026-004582">
+      <button class="btn btn-primary" onclick="trackApp()">Search</button>
+    </div>
+    <div id="trackResult"></div>
+    <a href="index.html" class="btn btn-link mt-3">Return Home</a>
+  </div>
+  <script src="js/storage.js"></script>
+  <script>
+    function escapeHTML(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function trackApp() {
+      const id = document.getElementById('trackInput').value.trim();
+      const apps = getStorage(STORAGE_KEYS.APPLICATIONS);
+      const app = apps.find(a => a.id === id);
+      const res = document.getElementById('trackResult');
+      if(!app) {
+        res.innerHTML = `<div class="alert alert-danger">No application found with Reference ID ${escapeHTML(id)}</div>`;
+        return;
+      }
+      res.innerHTML = `
+        <div class="card card-gov p-3">
+          <h5>Reference: ${escapeHTML(app.id)}</h5>
+          <p><strong>Business:</strong> ${escapeHTML(app.businessName)}</p>
+          <p><strong>Status:</strong> <span class="badge bg-info text-dark">${escapeHTML(app.status)}</span></p>
+          <p><strong>Assigned Officer:</strong> ${escapeHTML(app.assignedOfficerId || 'Not Assigned Yet')}</p>
+          <p><strong>Scheduled Inspection:</strong> ${escapeHTML(app.scheduleDate ? app.scheduleDate + ' @ ' + app.scheduleTime : 'Pending Schedule')}</p>
+        </div>`;
+    }
+  </script>
+</body>
+</html>

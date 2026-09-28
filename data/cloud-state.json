@@ -1,0 +1,20 @@
+{
+  "sih_lm_certificates": [],
+  "lastSyncedAt": "2026-09-14T11:09:29.702Z",
+  "sih_lm_audit_logs": [
+    {
+      "timestamp": "2026-09-14T04:32:38.940Z",
+      "action": "Public Certificate Verification",
+      "details": "GATC-CERT-CLOUD-TEST checked through cloud registry.",
+      "eventId": "632a20ea-8fd3-4e9a-9666-cbe5b844d015"
+    },
+    {
+      "timestamp": "2026-09-14T04:32:23.408Z",
+      "action": "Public Certificate Verification",
+      "details": "GATC-CERT-CLOUD-TEST checked through cloud registry.",
+      "eventId": "8a29309d-0cd4-48ba-a316-aa68827d98a7"
+    }
+  ],
+  "sih_lm_registered_users": [],
+  "sih_lm_applications": []
+}

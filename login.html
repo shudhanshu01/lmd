@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VeriMatrix | Portal Access</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/government-theme.css">
+</head>
+<body class="bg-light">
+
+  <div class="top-bar">
+    <div class="container text-center">
+      <span class="badge bg-warning text-dark">VeriMatrix Secure Portal Access</span>
+    </div>
+  </div>
+
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="card card-gov shadow-sm">
+          <div class="card-header text-center py-3">
+            <h5 class="m-0 fw-bold"><i class="bi bi-shield-lock-fill me-2"></i> Role-Based Access Control</h5>
+          </div>
+          <div class="card-body p-4">
+            <form id="loginForm" onsubmit="handleLogin(event)">
+              
+              <div class="mb-3">
+                <label for="userRole" class="form-label fw-semibold">Select User Role</label>
+                <select id="userRole" class="form-select" onchange="updateDemoCredentials()">
+                  <option value="business">Shopkeeper / Business Owner</option>
+                  <option value="admin">Administrator</option>
+                  <option value="lmo">Legal Metrology Officer (LMO)</option>
+                  <option value="gatc">GATC Testing Center</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="userLicense" class="form-label fw-semibold">User Identification ID / License</label>
+                <input type="text" id="userLicense" class="form-control" value="ABC General Store">
+              </div>
+
+              <div class="mb-3">
+                <label for="adminPassword" class="form-label fw-semibold">Access Password</label>
+                <div class="input-group">
+                  <input type="password" id="adminPassword" class="form-control hide-native-eye" value="admin" required>
+                  <button class="btn btn-outline-secondary" type="button" id="togglePasswordBtn" onclick="togglePasswordVisibility('adminPassword', 'toggleIcon')">
+                    <i class="bi bi-eye" id="toggleIcon"></i>
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100 fw-bold py-2">Access Dashboard</button>
+            </form>
+          </div>
+          <div class="card-footer bg-light text-center py-3">
+            <a href="index.html" class="text-decoration-none"><i class="bi bi-arrow-left"></i> Back to Public Homepage</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script>
+    function togglePasswordVisibility(inputId = 'adminPassword', iconId = 'toggleIcon') {
+      const passwordInput = document.getElementById(inputId);
+      const toggleIcon = document.getElementById(iconId);
+
+      if (!passwordInput || !toggleIcon) return;
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('bi-eye');
+        toggleIcon.classList.add('bi-eye-slash');
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('bi-eye-slash');
+        toggleIcon.classList.add('bi-eye');
+      }
+    }
+
+    function updateDemoCredentials() {
+      const role = document.getElementById('userRole').value;
+      const uInput = document.getElementById('userLicense');
+      if (role === 'business') uInput.value = 'ABC General Store';
+      if (role === 'admin') uInput.value = 'Admin_Officer_Central';
+      if (role === 'lmo') uInput.value = 'LMO-UK-1024';
+      if (role === 'gatc') uInput.value = 'GATC-LAB-01';
+    }
+
+    const requestedRole = new URLSearchParams(window.location.search).get('role');
+    if (['business', 'admin', 'lmo', 'gatc'].includes(requestedRole)) {
+      document.getElementById('userRole').value = requestedRole;
+      updateDemoCredentials();
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const role = document.getElementById('userRole').value;
+      const username = document.getElementById('userLicense').value;
+      localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify({ role, username }));
+      
+      // Redirect based on role
+      if (role === 'business') window.location.href = 'citizens/dashboard.html';
+      if (role === 'admin') window.location.href = 'admin/dashboard.html';
+      if (role === 'lmo') window.location.href = 'lmo/dashboard.html';
+      if (role === 'gatc') window.location.href = 'gatc/dashboard.html';
+    }
+  </script>
+</body>
+</html>

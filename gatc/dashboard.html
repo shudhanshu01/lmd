@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GATC Central Verification Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/government-theme.css">
+  <link rel="stylesheet" href="../css/gatc.css">
+</head>
+<body class="gatc-body">
+  <nav class="navbar navbar-expand-lg gatc-nav">
+    <div class="container-fluid px-4 flex-wrap gap-2">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#dashboard">
+        <span class="gatc-emblem"><i class="bi bi-shield-check"></i></span>
+        <span><strong>VeriMatrix GATC Portal</strong><small class="d-block">Certificate authorization center</small></span>
+      </a>
+      <div class="d-flex align-items-center gap-3">
+        <span class="badge text-bg-light" id="userRoleBadge">GATC LAB</span>
+        <span class="small text-white-50 d-none d-md-inline" id="lastUpdated"></span>
+        <button class="btn btn-sm btn-outline-light" onclick="logout()"><i class="bi bi-box-arrow-right me-1"></i>Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid px-0">
+    <div class="gatc-layout">
+      <aside class="gatc-sidebar">
+        <div class="small text-uppercase fw-bold text-secondary mb-2">Operations</div>
+        <a href="#dashboard" class="gatc-side-link active" data-section="dashboard"><i class="bi bi-grid-1x2-fill"></i> Central Dashboard</a>
+        <a href="#intake" class="gatc-side-link" data-section="intake"><i class="bi bi-file-earmark-plus"></i> Application Intake</a>
+        <a href="#reception" class="gatc-side-link" data-section="reception"><i class="bi bi-upc-scan"></i> Reception & Barcoding</a>
+        <a href="#testing" class="gatc-side-link" data-section="testing"><i class="bi bi-clipboard2-pulse"></i> Testing Workbench</a>
+        <a href="#certificates" class="gatc-side-link" data-section="certificates"><i class="bi bi-patch-check"></i> Stamping & Certificates</a>
+        <a href="#audit" class="gatc-side-link" data-section="audit"><i class="bi bi-journal-text"></i> Audit Vault</a>
+        <div class="gatc-sidebar-footer"><span class="status-dot"></span> Central records connected<br><small>Last sync: <span id="syncTime">now</span></small></div>
+      </aside>
+
+      <main class="gatc-main">
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+          <div><p class="eyebrow mb-1">Government Approved Test Centre</p><h1 class="h3 fw-bold mb-1" id="pageTitle">Central Verification Dashboard</h1><p class="text-secondary mb-0" id="pageSubtitle">Single source of truth for every verification stage.</p></div>
+          <div class="d-flex gap-2"><button class="btn btn-outline-primary" onclick="openSearch()"><i class="bi bi-search me-1"></i>Search records</button><button class="btn btn-primary" onclick="openIntakeModal()"><i class="bi bi-plus-lg me-1"></i>New application</button></div>
+        </div>
+
+        <section id="dashboardSection" class="gatc-section">
+          <div class="row g-3 mb-4" id="metricGrid"></div>
+          <div class="row g-4">
+            <div class="col-xl-8"><div class="panel"><div class="panel-heading"><div><h2 class="h6 mb-1">Master verification queue</h2><p class="small text-secondary mb-0">All records across intake, reception, testing and authorization.</p></div><div class="d-flex gap-2"><select class="form-select form-select-sm" id="queueFilter" onchange="renderAll()"><option value="ALL">All statuses</option><option value="SUBMITTED">Submitted</option><option value="SCHEDULED">Scheduled</option><option value="RECEIVED">Received</option><option value="IN_TESTING">In testing</option><option value="TEST_PASSED">Passed</option><option value="CERTIFIED">Certified</option><option value="REJECTED">Rejected</option></select></div></div><div class="table-responsive"><table class="table table-hover align-middle mb-0"><thead><tr><th>Application</th><th>Manufacturer</th><th>Instrument</th><th>Stage</th><th>SLA</th><th></th></tr></thead><tbody id="queueTable"></tbody></table></div></div></div>
+            <div class="col-xl-4"><div class="panel h-100"><div class="panel-heading"><div><h2 class="h6 mb-1">Live activity</h2><p class="small text-secondary mb-0">Immutable operational feed</p></div><span class="live-pill"><span></span> LIVE</span></div><div class="activity-list" id="activityFeed"></div></div></div>
+          </div>
+          <div class="row g-4 mt-1"><div class="col-lg-7"><div class="panel"><div class="panel-heading"><h2 class="h6 mb-0">SLA and compliance exceptions</h2><span class="badge text-bg-warning" id="exceptionCount">0</span></div><div id="exceptions" class="exception-list"></div></div></div><div class="col-lg-5"><div class="panel"><div class="panel-heading"><h2 class="h6 mb-0">Quick workflow</h2></div><div class="quick-grid"><button onclick="openIntakeModal()"><i class="bi bi-file-earmark-plus"></i><span>Application intake</span></button><button onclick="showSection('reception')"><i class="bi bi-upc-scan"></i><span>Receive sample</span></button><button onclick="showSection('testing')"><i class="bi bi-clipboard2-pulse"></i><span>Run test</span></button><button onclick="showSection('certificates')"><i class="bi bi-patch-check"></i><span>Authorize result</span></button></div></div></div></div>
+        </section>
+
+        <section id="receptionSection" class="gatc-section d-none"><div class="panel"><div class="panel-heading"><div><h2 class="h6 mb-1">Physical equipment reception</h2><p class="small text-secondary mb-0">Confirm condition, generate a sample code and assign a laboratory bench.</p></div></div><div id="receptionCards" class="row g-3 p-3"></div></div></section>
+        <section id="testingSection" class="gatc-section d-none"><div class="panel"><div class="panel-heading"><div><h2 class="h6 mb-1">Metrological testing workbench</h2><p class="small text-secondary mb-0">Capture raw readings against a valid reference standard.</p></div></div><div id="testingCards" class="row g-3 p-3"></div></div></section>
+        <section id="certificatesSection" class="gatc-section d-none"><div class="panel"><div class="panel-heading"><div><h2 class="h6 mb-1">Report review, stamping and certificate authorization</h2><p class="small text-secondary mb-0">Review LMO inspection reports, then issue or reject the official certificate.</p></div></div><div id="certificateCards" class="row g-3 p-3"></div></div></section>
+        <section id="auditSection" class="gatc-section d-none"><div class="panel"><div class="panel-heading"><div><h2 class="h6 mb-1">Master audit and five-year registry</h2><p class="small text-secondary mb-0">Search the central record and export a compliance report.</p></div><button class="btn btn-sm btn-outline-primary" onclick="exportAudit()"><i class="bi bi-download me-1"></i>Export CSV</button></div><div class="p-3"><div class="row g-2 mb-3"><div class="col-md-5"><input class="form-control" id="auditSearch" oninput="renderAudit()" placeholder="Search application, manufacturer, certificate..."></div><div class="col-md-3"><select class="form-select" id="auditStatus" onchange="renderAudit()"><option value="ALL">All outcomes</option><option value="CERTIFIED">Certified</option><option value="REJECTED">Rejected</option></select></div></div><div class="table-responsive"><table class="table table-sm align-middle"><thead><tr><th>Application</th><th>Manufacturer</th><th>Status</th><th>Certificate / sample</th><th>Last updated</th></tr></thead><tbody id="auditTable"></tbody></table></div></div></div></section>
+        <section id="intakeSection" class="gatc-section d-none"><div class="panel p-4"><h2 class="h6 mb-1">Application intake</h2><p class="small text-secondary mb-4">Create a central verification record and schedule its arrival.</p><form id="intakeForm" onsubmit="submitGatcApplication(event)"><div class="row g-3"><div class="col-md-6"><label class="form-label">Manufacturer name</label><input required id="intakeManufacturer" class="form-control"></div><div class="col-md-6"><label class="form-label">Contact person</label><input required id="intakeContact" class="form-control"></div><div class="col-md-6"><label class="form-label">Model approval certificate number</label><input required id="intakeApproval" class="form-control"></div><div class="col-md-6"><label class="form-label">Instrument model</label><input required id="intakeModel" class="form-control"></div><div class="col-md-4"><label class="form-label">Instrument category</label><select id="intakeCategory" class="form-select"><option>I</option><option>II</option><option>III</option><option>IV</option></select></div><div class="col-md-4"><label class="form-label">Serial number</label><input required id="intakeSerial" class="form-control"></div><div class="col-md-4"><label class="form-label">Verification type</label><select id="intakeType" class="form-select"><option>INITIAL</option><option selected>PERIODIC</option><option>POST_REPAIR</option></select></div><div class="col-md-6"><label class="form-label">Scheduled arrival</label><input required type="datetime-local" id="intakeSchedule" class="form-control"></div><div class="col-md-6"><label class="form-label">Fee collected (INR)</label><input required type="number" min="0" id="intakeFee" value="1250" class="form-control"></div></div><div class="d-flex justify-content-end gap-2 mt-4"><button type="button" class="btn btn-light" onclick="showSection('dashboard')">Cancel</button><button class="btn btn-primary"><i class="bi bi-check2 me-1"></i>Create application</button></div></form></div></section>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal fade" id="workflowModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="modalTitle">Workflow action</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body" id="modalBody"></div></div></div></div>
+  <div class="modal fade" id="searchModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Universal record search</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><input autofocus class="form-control mb-3" id="universalSearch" oninput="renderSearchResults()" placeholder="Search application, manufacturer, sample or certificate"><div id="searchResults"></div></div></div></div></div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/storage.js"></script><script src="../js/app.js"></script><script src="../js/gatc.js"></script>
+</body>
+</html>

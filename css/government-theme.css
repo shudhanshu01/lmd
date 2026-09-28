@@ -1,0 +1,326 @@
+:root {
+  --gov-blue: #003366;
+  --gov-navy: #0b2545;
+  --gov-saffron: #ff9933;
+  --gov-green: #138808;
+  --gov-light-bg: #f4f7fa;
+  --gov-border: #cccccc;
+  --gov-text: #222222;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--gov-light-bg);
+  color: var(--gov-text);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+img, video, canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* High Contrast Mode */
+body.high-contrast {
+  background-color: #000000 !important;
+  color: #ffff00 !important;
+}
+body.high-contrast .card,
+body.high-contrast .navbar,
+body.high-contrast .top-bar {
+  background-color: #111111 !important;
+  color: #ffff00 !important;
+  border-color: #ffff00 !important;
+}
+body.high-contrast a,
+body.high-contrast .btn-primary {
+  color: #00ffff !important;
+  background-color: #000000 !important;
+  border-color: #00ffff !important;
+}
+
+/* Font Size Controls */
+body.font-sm { font-size: 14px; }
+body.font-md { font-size: 16px; }
+body.font-lg { font-size: 18px; }
+
+/* Top Utility Bar */
+.top-bar {
+  background-color: var(--gov-navy);
+  color: #ffffff;
+  font-size: 0.85rem;
+  padding: 4px 0;
+}
+
+.top-bar .container {
+  gap: 8px;
+}
+
+.top-bar a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Header & Logos */
+.gov-header {
+  background-color: #ffffff;
+  border-bottom: 3px solid var(--gov-saffron);
+  padding: 12px 0;
+}
+
+.gov-header .container > :first-child {
+  min-width: 0;
+}
+
+.gov-header h4,
+.gov-header p {
+  overflow-wrap: anywhere;
+}
+
+.emblem-logo {
+  max-height: 50px;
+}
+
+/* Main Navigation */
+.gov-navbar {
+  background-color: var(--gov-blue);
+}
+
+.gov-navbar .nav-link {
+  color: #ffffff !important;
+  font-weight: 500;
+  padding: 10px 16px;
+}
+
+.gov-navbar .nav-link:hover,
+.gov-navbar .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-bottom: 3px solid var(--gov-saffron);
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, var(--gov-navy) 0%, var(--gov-blue) 100%);
+  color: #ffffff;
+  padding: 60px 0;
+}
+
+/* Cards & Components */
+.card-gov {
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+}
+
+.card-gov .card-header {
+  background-color: #ffffff;
+  border-bottom: 2px solid var(--gov-blue);
+  font-weight: 600;
+  color: var(--gov-blue);
+}
+
+.table-responsive {
+  -webkit-overflow-scrolling: touch;
+}
+
+.badge-status {
+  font-size: 0.8rem;
+  padding: 5px 10px;
+  border-radius: 12px;
+}
+
+/* Printable Certificate */
+.certificate-container {
+  border: 10px solid var(--gov-blue);
+  padding: 30px;
+  background-color: #ffffff;
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.certificate-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.05;
+  width: 60%;
+  pointer-events: none;
+}
+
+.verification-qr {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+}
+
+/* Mobile Friendly Table Overrides */
+@media (max-width: 768px) {
+  .mobile-card-table tr {
+    display: block;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px;
+    background: #fff;
+  }
+  .mobile-card-table td {
+    display: flex;
+    justify-content: space-between;
+    border: none;
+    padding: 6px 0;
+  }
+  .mobile-card-table thead {
+    display: none;
+  }
+}
+
+/* Hide browser default password reveal/eye button in Microsoft Edge / IE */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none !important;
+}
+
+/* Hide native eye button in WebKit browsers if enabled */
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Ensure custom input group button aligns cleanly */
+.input-group .btn {
+  z-index: 2;
+}
+
+@media (max-width: 767.98px) {
+  .top-bar .container,
+  .gov-header > .container {
+    flex-wrap: wrap;
+  }
+
+  .top-bar .container > :last-child {
+    width: 100%;
+    text-align: right;
+  }
+
+  .gov-header > .container > :last-child {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .gov-header .btn {
+    flex: 1 1 220px;
+  }
+
+  .hero-section {
+    padding: 42px 0;
+  }
+
+  .hero-section .d-flex {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-section .btn {
+    width: 100%;
+  }
+
+  .alert {
+    align-items: flex-start !important;
+  }
+
+  .card-header.d-flex,
+  .panel-heading {
+    flex-wrap: wrap;
+  }
+
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+
+  .modal-content {
+    max-height: calc(100vh - 1rem);
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .container,
+  .container-fluid {
+    --bs-gutter-x: 1.25rem;
+  }
+
+  .top-bar {
+    font-size: 0.78rem;
+  }
+
+  .top-bar .container > :first-child,
+  .top-bar .container > :last-child {
+    width: 100%;
+  }
+
+  .top-bar .container > :last-child {
+    text-align: left;
+  }
+
+  .gov-header {
+    padding: 10px 0;
+  }
+
+  .gov-header .container > :first-child {
+    align-items: flex-start !important;
+  }
+
+  .gov-header .container > :first-child > i {
+    font-size: 2rem !important;
+    margin-right: 0.6rem !important;
+  }
+
+  .gov-header h4 {
+    font-size: 1rem;
+  }
+
+  .gov-header p {
+    font-size: 0.7rem !important;
+  }
+
+  .gov-header > .container > :last-child {
+    justify-content: stretch;
+  }
+
+  .gov-header .btn {
+    flex-basis: 100%;
+  }
+
+  .navbar-brand {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .card-body,
+  .card-header {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .certificate-container {
+    border-width: 5px;
+    padding: 16px;
+  }
+
+  .verification-qr {
+    width: 120px;
+    height: 120px;
+  }
+}

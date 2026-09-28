@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VeriMatrix | Admin Operations Center</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../css/government-theme.css">
+</head>
+<body class="bg-light">
+
+  <nav class="navbar navbar-dark bg-navy p-2" style="background-color: var(--gov-navy)">
+    <div class="container-fluid flex-wrap gap-2">
+      <span class="navbar-brand fw-bold"><i class="bi bi-shield-lock me-2"></i> VeriMatrix Operations Control Center</span>
+      <button class="btn btn-outline-light btn-sm" onclick="logout()">Logout Admin</button>
+    </div>
+  </nav>
+
+  <div class="container-fluid py-4">
+    <!-- Stat Counter Widgets -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-2">
+        <div class="card card-gov p-3 text-center border-start border-primary border-4">
+          <small class="text-muted fw-bold">TOTAL APPS</small>
+          <h3 class="m-0 fw-bold" id="statTotalApps">0</h3>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="card card-gov p-3 text-center border-start border-warning border-4">
+          <small class="text-muted fw-bold">PENDING REVIEW</small>
+          <h3 class="m-0 fw-bold text-warning" id="statPending">0</h3>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="card card-gov p-3 text-center border-start border-info border-4">
+          <small class="text-muted fw-bold">SCHEDULED</small>
+          <h3 class="m-0 fw-bold text-info" id="statScheduled">0</h3>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="card card-gov p-3 text-center border-start border-success border-4">
+          <small class="text-muted fw-bold">VERIFIED CERTIFICATES</small>
+          <h3 class="m-0 fw-bold text-success" id="statCertificates">0</h3>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card card-gov p-3">
+          <small class="text-muted fw-bold">ACTIVE LMO FIELD WORKLOAD</small>
+          <div id="officerWorkload" class="small mt-1"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Application Verification Table -->
+    <div class="card card-gov">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Verification Applications Queue</span>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>App Ref</th>
+                <th>Business & Location</th>
+                <th>Instrument Specs</th>
+                <th>Current Status</th>
+                <th>Assigned LMO</th>
+                <th>Schedule Date/Time</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminAppTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- System Audit Logs -->
+    <div class="card card-gov mt-4">
+      <div class="card-header"><i class="bi bi-journal-text me-2"></i> System Security & Audit Trail</div>
+      <div class="card-body p-0">
+        <ul class="list-group list-group-flush" id="auditLogList" style="max-height: 200px; overflow-y: auto; font-size: 0.85rem;"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assign & Schedule Modal (STEP 4, 5, 6 Workflow) -->
+  <div class="modal fade" id="assignModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Approve & Schedule LMO Inspection</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="assignForm" onsubmit="saveAssignment(event)">
+            <input type="hidden" id="targetAppId">
+            <div class="mb-3">
+              <label class="form-label fw-bold">Assign Field Officer (LMO)</label>
+              <!-- STEP 5 Target Selection -->
+              <select id="officerSelect" class="form-select" required>
+                <option value="LMO-UK-1024">Rajesh Kumar — LMO-UK-1024 (Chamoli Zone)</option>
+                <option value="LMO-UK-1025">Anita Verma — LMO-UK-1025 (Dehradun Zone)</option>
+              </select>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <!-- STEP 6 Target Date -->
+                <label class="form-label fw-bold">Inspection Date</label>
+                <input type="date" id="schedDate" class="form-control" value="2026-09-15" required>
+              </div>
+              <div class="col-6">
+                <!-- STEP 6 Target Time -->
+                <label class="form-label fw-bold">Time Slot</label>
+                <input type="time" id="schedTime" class="form-control" value="11:30" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-success w-100 fw-bold">Confirm Approval & Dispatch LMO</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/storage.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VeriMatrix | Shopkeeper Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../css/government-theme.css">
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+      <span class="navbar-brand fw-bold"><i class="bi bi-shield-check me-2"></i> VeriMatrix Business Portal</span>
+      <button class="btn btn-outline-light btn-sm" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+    <!-- Header banner showing step 1 to step 3 completion -->
+    <div class="d-flex flex-wrap gap-3 justify-content-between align-items-center mb-4">
+      <h3>Business Owner Dashboard</h3>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#appModal"><i class="bi bi-plus-circle me-1"></i> Apply for Verification</button>
+    </div>
+
+    <!-- Active Applications Table -->
+    <div class="card card-gov mb-4">
+      <div class="card-header">Your Instrument Verification Applications</div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0 mobile-card-table">
+            <thead class="table-light">
+              <tr>
+                <th>App ID</th>
+                <th>Instrument</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Assigned Officer</th>
+                <th>Inspection Schedule</th>
+                <th>Actions / Certificates</th>
+              </tr>
+            </thead>
+            <tbody id="citizenAppTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apply Modal (STEP 2 & 3 Workflow) -->
+  <div class="modal fade" id="appModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">New Verification Application</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="newAppForm" onsubmit="submitApplication(event)">
+            <div class="mb-2">
+              <label class="form-label">Business Name</label>
+              <input type="text" id="bizName" class="form-control" value="ABC General Store" required>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Establishment Location</label>
+              <input type="text" id="bizLoc" class="form-control" value="Govindghat, Chamoli, Uttarakhand" required>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Instrument Type</label>
+              <select id="instType" class="form-select">
+                <option>Digital Weighing Scale</option>
+                <option>Counter Weighing Scale</option>
+                <option>Fuel Dispensing Pump</option>
+              </select>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Serial Number</label>
+              <input type="text" id="serialNo" class="form-control" value="DWS-2026-8891" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Capacity Standard</label>
+              <input type="text" id="capacity" class="form-control" value="100 kg" required>
+            </div>
+            <!-- NOTE: Notice that the shopkeeper CANNOT select an officer -->
+            <div class="alert alert-warning small">
+              <i class="bi bi-shield-lock me-1"></i> Legal Metrology Officer will be automatically assigned by administration upon application approval.
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Submit Application</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/storage.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/citizen.js"></script>
+</body>
+</html>

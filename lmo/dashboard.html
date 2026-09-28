@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VeriMatrix | LMO Field Inspection Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../css/government-theme.css">
+</head>
+<body class="bg-light pb-5">
+
+  <div class="p-3 bg-primary text-white d-flex flex-wrap gap-2 justify-content-between align-items-center">
+    <div>
+      <h6 class="m-0 fw-bold"><i class="bi bi-person-badge me-1"></i> VeriMatrix Field Inspection Portal</h6>
+      <small>Officer: Rajesh Kumar (LMO-UK-1024)</small>
+    </div>
+    <button class="btn btn-sm btn-outline-light" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="container py-3">
+    <section class="row g-3 mb-4" aria-label="Inspection work summary">
+      <div class="col-6 col-lg-3"><div class="card card-gov p-3 border-start border-4 border-primary"><small class="text-muted fw-bold">PENDING TASKS</small><h3 class="m-0 fw-bold text-primary" id="lmoPendingCount">0</h3><small class="text-muted">Scheduled inspections</small></div></div>
+      <div class="col-6 col-lg-3"><div class="card card-gov p-3 border-start border-4 border-warning"><small class="text-muted fw-bold">REPORTS SUBMITTED</small><h3 class="m-0 fw-bold text-warning" id="lmoReportCount">0</h3><small class="text-muted">Waiting for GATC</small></div></div>
+      <div class="col-6 col-lg-3"><div class="card card-gov p-3 border-start border-4 border-success"><small class="text-muted fw-bold">COMPLETED</small><h3 class="m-0 fw-bold text-success" id="lmoCompletedCount">0</h3><small class="text-muted">Final outcomes</small></div></div>
+      <div class="col-6 col-lg-3"><div class="card card-gov p-3 border-start border-4 border-danger"><small class="text-muted fw-bold">REJECTED</small><h3 class="m-0 fw-bold text-danger" id="lmoRejectedCount">0</h3><small class="text-muted">Failed inspections</small></div></div>
+    </section>
+
+    <!-- STEP 7: View Assigned Inspections -->
+    <div id="assignedListSection">
+      <h6 class="fw-bold text-muted mb-3">SCHEDULED FIELD INSPECTIONS</h6>
+      <div id="lmoTaskCards"></div>
+
+      <div class="card card-gov mt-4">
+        <div class="card-header"><i class="bi bi-clipboard2-check me-2"></i>Inspection Reports & Outcomes</div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light"><tr><th>Application</th><th>Business</th><th>Inspection</th><th>Report / Result</th><th>GATC Status</th></tr></thead>
+              <tbody id="lmoReportTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-gov mt-4">
+        <div class="card-header"><i class="bi bi-clock-history me-2"></i>Inspection Activity</div>
+        <div class="list-group list-group-flush" id="lmoActivityList"></div>
+      </div>
+    </div>
+
+    <!-- STEP 8 to STEP 12 Mobile Form Container -->
+    <div id="inspectionFormSection" style="display: none;">
+      <button class="btn btn-sm btn-secondary mb-3" onclick="cancelInspection()"><i class="bi bi-arrow-left"></i> Back to Schedule</button>
+
+      <div class="card card-gov p-3">
+        <h5 class="fw-bold text-primary mb-1" id="inspectBizName">ABC General Store</h5>
+        <p class="small text-muted mb-3" id="inspectAppId">App Ref: LM-VER-2026-004582</p>
+
+        <!-- STEP 8: GPS Verification -->
+        <div class="card p-2 bg-light mb-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="small fw-bold"><i class="bi bi-geo-alt-fill text-danger me-1"></i> Field GPS Verification</span>
+            <button class="btn btn-sm btn-outline-primary" onclick="verifyGPS()"><i class="bi bi-crosshair"></i> Check GPS Location</button>
+          </div>
+          <div id="gpsStatus" class="small text-muted mt-1">Location unverified</div>
+        </div>
+
+        <form id="lmoExecForm" onsubmit="submitInspectionResult(event)">
+          <!-- STEP 9: Visual Checklist -->
+          <h6 class="fw-bold border-bottom pb-1">Visual & Physical Checks</h6>
+          <div class="form-check mb-1">
+            <input class="form-check-input" type="checkbox" id="chk1" required checked>
+            <label class="form-check-label small" for="chk1">Serial Number Matches Documentation</label>
+          </div>
+          <div class="form-check mb-1">
+            <input class="form-check-input" type="checkbox" id="chk2" required checked>
+            <label class="form-check-label small" for="chk2">Physical Condition & Display Working</label>
+          </div>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="chk3" required checked>
+            <label class="form-check-label small" for="chk3">Verification Markings & Physical Lead Seals Intact</label>
+          </div>
+
+          <!-- STEP 10: Technical Error Calculation -->
+          <h6 class="fw-bold border-bottom pb-1">Technical Tolerance Testing</h6>
+          <div class="row g-2 mb-2">
+            <div class="col-6">
+              <label class="form-label small">Standard Load (kg)</label>
+              <input type="number" step="0.01" id="stdLoad" class="form-control" value="100.00" oninput="calculateError()" required>
+            </div>
+            <div class="col-6">
+              <label class="form-label small">Observed Load (kg)</label>
+              <input type="number" step="0.01" id="obsLoad" class="form-control" value="99.95" oninput="calculateError()" required>
+            </div>
+          </div>
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label small">Tolerance Allowed</label>
+              <input type="text" class="form-control" value="±0.10 kg" readonly>
+            </div>
+            <div class="col-6">
+              <label class="form-label small fw-bold">Calculated Error</label>
+              <input type="text" id="calcError" class="form-control fw-bold" readonly value="-0.05 kg">
+            </div>
+          </div>
+
+          <div class="alert alert-success text-center py-2 fw-bold" id="testResultBadge">TEST RESULT: PASS</div>
+
+          <!-- STEP 11: Photo Evidence Upload -->
+          <h6 class="fw-bold border-bottom pb-1">Photographic Evidence</h6>
+          <div class="mb-3">
+            <input type="file" id="photoInput" class="form-control" accept="image/*" onchange="previewPhoto(event)">
+            <img id="photoPreview" class="img-fluid rounded mt-2 border" style="max-height: 150px; display: none;">
+          </div>
+
+          <!-- STEP 12: Submission -->
+          <button type="submit" class="btn btn-success w-100 fw-bold py-2"><i class="bi bi-cloud-upload"></i> Submit Inspection Report to GATC</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/lmo.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "gatc-legal-metrology-portal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GATC Legal Metrology verification portal with cloud-ready certificate registry",
+  "scripts": {
+    "start": "node server.js",
+    "migrate": "node scripts/migrate-json-to-mongo.js",
+    "check": "node --check server.js && node --check config/db.js && node --check middleware/database.js && node --check middleware/demoRole.js && node --check routes/index.js && node --check routes/applications.js && node --check routes/inspections.js && node --check routes/gatc.js && node --check routes/certificates.js && node --check routes/users.js && node --check routes/public.js && node --check models/User.js && node --check models/Application.js && node --check models/Inspection.js && node --check models/GATCTest.js && node --check models/Certificate.js && node --check models/AuditLog.js && node --check js/storage.js && node --check js/gatc.js && node --check js/verification.js"
+  },
+  "main": "server.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.10.0"
+  }
+}
